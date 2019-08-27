@@ -2,7 +2,8 @@ const express = require("express");
 const gravatar = require("gravatar");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const config = require("config");
+// process.env.SUPPRESS_NO_CONFIG_WARNING = "y";
+// const config = require("config");
 const router = express.Router();
 const { check, validationResult } = require("express-validator");
 
@@ -11,7 +12,7 @@ const User = require("../../models/User");
 // @desc Register User
 // @access Public Route No Token Needed
 router.post(
-  "/",
+  "/register",
   [
     check("name", "Name is required")
       .not()
@@ -51,14 +52,22 @@ router.post(
       user.password = await bcrypt.hash(password, salt);
       await user.save();
       // Return jswonwebtoken
-      // const payload = {
-      //   user: {
-      //     id: user.id
-      //   }
-      // };
-      // jwt.sign(payload);
+      const payload = {
+        user: {
+          id: user.id
+        }
+      };
+      jwt.sign(
+        payload,
+        process.env.jwtSecret,
+        { expiresIn: 360000 },
+        (err, token) => {
+          if (err) throw err;
+          res.json({ token });
+        }
+      );
       //Send Registered Message
-      res.send("User Registered");
+      // res.send("User Registered");
     } catch (err) {
       res.status(500).send("Server error");
     }
