@@ -1,10 +1,14 @@
 const express = require("express");
 const router = express.Router();
-const { check, validationResult } = require("express-validator");
-const auth = require("../../middleware/auth");
-// const Profile = require("../../models/Profile");
-// const User = require("../../models/User");
 
+// Npm Packages
+const request = require("request");
+const { check, validationResult } = require("express-validator");
+
+//Middleware
+const auth = require("../../middleware/auth");
+
+//Models
 const { Profile, User } = require("../../models");
 
 /****************
@@ -274,7 +278,7 @@ router.put(
         .not()
         .isEmpty(),
 
-      check("fieldofstudy", "field of study Is required")
+      check("fieldofstudy", "Field of study Is required")
         .not()
         .isEmpty()
     ]
@@ -340,4 +344,34 @@ router.delete("/education/:edu_id", auth, async (req, res) => {
   }
 });
 
+/***********
+ * GITHUB
+ ***********/
+
+// @route GET api/profile/github/:username
+// @desc Get User Repos from Github
+// @access Public Token Not Needed
+
+router.get("/github/:username", async (req, res) => {
+  const uri = `https://api.github.com/users/${req.params.username}/repos?per_page=5&sort=created:asc&client_id=${process.env.githubClientID}&client_secret=${process.env.githubSecret}`;
+
+  try {
+    const options = {
+      uri,
+      method: "GET",
+      headers: { "user-agent": "node.js" }
+    };
+
+    request(options, (error, response, body) => {
+      if (error) console.error(error);
+      if (response.statusCode !== 200) {
+        return res.status(404).json({ msg: "No Github profile found" });
+      }
+      res.json(JSON.parse(body));
+    });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send("Server error");
+  }
+});
 module.exports = router;
