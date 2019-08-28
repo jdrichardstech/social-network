@@ -144,65 +144,66 @@ router.post(
   }
 );
 
-// @route Delete api/profile/experience/
-// @desc Add Profile Experience
+// @route Create and Update api/profile/experience/
+// @desc Add Experience to Profile
 // @access Private Token Needed
 
-// router.put(
-//   "/experience",
-//   [
-//     auth,
-//     [
-//       check("title", "Title Is required")
-//         .not()
-//         .isEmpty(),
-//       check("company", "Company Is required")
-//         .not()
-//         .isEmpty(),
-//       check("from", "From date Is required")
-//         .not()
-//         .isEmpty()
-//     ]
-//   ],
-//   async (req, res) => {
-//     const errors = validationResult(req);
-//     if (!errors.isEmpty()) {
-//       return res.status(400).json({ errors: errors.array });
-//     }
+router.put(
+  "/experience",
+  [
+    auth,
+    [
+      check("title", "Title Is required")
+        .not()
+        .isEmpty(),
+      check("company", "Company Is required")
+        .not()
+        .isEmpty(),
+      check("from", "From date Is required")
+        .not()
+        .isEmpty()
+    ]
+  ],
 
-//     const {
-//       title,
-//       company,
-//       location,
-//       from,
-//       to,
-//       current,
-//       description
-//     } = req.body;
+  async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array });
+    }
 
-//     const newExperience = {
-//       title,
-//       company,
-//       location,
-//       from,
-//       to,
-//       current,
-//       description
-//     };
+    const {
+      title,
+      company,
+      location,
+      from,
+      to,
+      current,
+      description
+    } = req.body;
 
-//     try {
-//       const profile = await Profile.findOne({ user: req.user.id });
-//       profile.experience.unshift(newExperience);
-//       await profile.save();
-//       res.json(profile);
-//     } catch (err) {
-//       console.error(err.message);
-//       res.status(500).send("Server error");
-//     }
-//   }
-// );
+    const newExperience = {
+      title,
+      company,
+      location,
+      from,
+      to,
+      current,
+      description
+    };
 
-// @route Delete api/profile/experience/exp_id
+    try {
+      let profile = await Profile.findOne({ user: req.user.id });
+      profile.experience.unshift(newExperience);
+      await profile.save();
+      res.json(profile);
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).send("Server error");
+    }
+  }
+);
+
+// @route Delete api/profile/
 // @desc Delete Profile, User, Post
 // @access Private Token Needed
 

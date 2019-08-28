@@ -8,7 +8,7 @@ const auth = require("../../middleware/auth");
 const router = express.Router();
 const { check, validationResult } = require("express-validator");
 
-const { User } = require("../../models");
+const { User, Profile } = require("../../models");
 
 // @route POST api/users/register
 // @desc Register User
@@ -69,6 +69,7 @@ router.post(
         { expiresIn: 360000 },
         (err, token) => {
           if (err) throw err;
+          console.log("User Created");
           res.json({ token });
         }
       );
@@ -101,12 +102,15 @@ router.get("/", async (req, res) => {
 // @desc Delete Profile, User, Post
 // @access Private Token Needed
 
-router.delete("/:id", auth, async (req, res) => {
+router.delete("/", auth, async (req, res) => {
   try {
     //@todo remove users posts
 
+    // Remove Profiles
+    await Profile.findOneAndRemove({ user: req.user.id });
     // Remove user
-    await User.findOneAndRemove({ _id: req.params.id });
+    await User.findOneAndRemove({ _id: req.user.id });
+
     res.json({ msg: "User removed" });
   } catch (err) {
     console.error(err.message);
