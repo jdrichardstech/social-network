@@ -86,7 +86,7 @@ router.post(
 
 router.get("/", async (req, res) => {
   try {
-    const users = await User.find();
+    const users = await User.find().select("-password");
 
     if (!users) return res.status(400).json({ msg: "Profile not found" });
     res.json(users);
