@@ -2,12 +2,15 @@ const express = require("express");
 const router = express.Router();
 const { check, validationResult } = require("express-validator");
 const auth = require("../../middleware/auth");
-const Profile = require("../../models/Profile");
-const User = require("../../models/User");
+// const Profile = require("../../models/Profile");
+// const User = require("../../models/User");
+
+const { Profile, User } = require("../../models");
 
 // @route GET api/profile/me
 // @desc Get current user profile
 // @access Private Token Needed
+
 router.get("/me", auth, async (req, res) => {
   try {
     const profile = await Profile.findOne({ user: req.user.id }).populate(
@@ -105,9 +108,9 @@ router.post(
   }
 );
 
-// @route POST api/profile/profiles
+// @route POST api/profile/users
 // @desc Create or Update User Profile
-// @access Private Token Needed
+// @access Public
 
 router.get("/users", async (req, res) => {
   try {
@@ -119,9 +122,9 @@ router.get("/users", async (req, res) => {
   }
 });
 
-// @route POST api/profile/profiles
-// @desc Create or Update User Profile
-// @access Private Token Needed
+// @route GET api/profile/user/:user_id
+// @desc Get one profile
+// @access Public
 
 router.get("/user/:user_id", async (req, res) => {
   try {

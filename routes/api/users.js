@@ -8,9 +8,11 @@ const router = express.Router();
 const { check, validationResult } = require("express-validator");
 
 const User = require("../../models/User");
+
 // @route POST api/users
 // @desc Register User
 // @access Public Route No Token Needed
+
 router.post(
   "/register",
   [
@@ -47,16 +49,19 @@ router.post(
         avatar,
         password
       });
-      // Encrypt password
+
+      // Encrypt password with bcryptjs
       const salt = await bcrypt.genSalt(10);
       user.password = await bcrypt.hash(password, salt);
       await user.save();
+
       // Return jswonwebtoken
       const payload = {
         user: {
           id: user.id
         }
       };
+
       jwt.sign(
         payload,
         process.env.jwtSecret,
@@ -66,6 +71,7 @@ router.post(
           res.json({ token });
         }
       );
+
       //Send Registered Message
       // res.send("User Registered");
     } catch (err) {
