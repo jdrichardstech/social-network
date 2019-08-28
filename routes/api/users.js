@@ -2,12 +2,13 @@ const express = require("express");
 const gravatar = require("gravatar");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const auth = require("../../middleware/auth");
 // process.env.SUPPRESS_NO_CONFIG_WARNING = "y";
 // const config = require("config");
 const router = express.Router();
 const { check, validationResult } = require("express-validator");
 
-const User = require("../../models/User");
+const { User } = require("../../models");
 
 // @route POST api/users/register
 // @desc Register User
@@ -90,6 +91,23 @@ router.get("/", async (req, res) => {
 
     if (!users) return res.status(400).json({ msg: "Profile not found" });
     res.json(users);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send("Server Error");
+  }
+});
+
+// @route Delete api/users
+// @desc Delete Profile, User, Post
+// @access Private Token Needed
+
+router.delete("/:id", auth, async (req, res) => {
+  try {
+    //@todo remove users posts
+
+    // Remove user
+    await User.findOneAndRemove({ _id: req.params.id });
+    res.json({ msg: "User removed" });
   } catch (err) {
     console.error(err.message);
     res.status(500).send("Server Error");
