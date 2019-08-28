@@ -87,7 +87,7 @@ router.post(
     if (linkedin) profileFields.linkedin = linkedin;
     if (instagram) profileFields.instagram = instagram;
 
-    // See if profile exists
+    // See if profile exists and set fields to profile
     try {
       let profile = await Profile.findOne({ user: req.user.id });
       if (profile) {

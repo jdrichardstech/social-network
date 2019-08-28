@@ -80,4 +80,20 @@ router.post(
   }
 );
 
+// @route GET api/users/
+// @desc Get All Users
+// @access Public Route No Token Needed
+
+router.get("/", async (req, res) => {
+  try {
+    const users = await User.find();
+
+    if (!users) return res.status(400).json({ msg: "Profile not found" });
+    res.json(users);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send("Server Error");
+  }
+});
+
 module.exports = router;
