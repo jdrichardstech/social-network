@@ -144,7 +144,7 @@ router.post(
   }
 );
 
-// @route Create and Update api/profile/experience/
+// @route Create api/profile/experience/
 // @desc Add Experience to Profile
 // @access Private Token Needed
 
@@ -202,6 +202,25 @@ router.put(
     }
   }
 );
+// @route Delete api/profile/experience/:exp_id
+// @desc Delete experience from profile
+// @access Private Token Needed
+
+router.delete("/experience/:exp_id", auth, async (req, res) => {
+  try {
+    const profile = await Profile.findOne({ user: req.user.id });
+
+    const getIndexFromProfileExperienceArray = profile.experience
+      .map(item => item.id)
+      .indexOf(req.params.exp_id);
+    profile.experience.splice(getIndexFromProfileExperienceArray, 1);
+    profile.save();
+    res.json(profile);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send("Server error");
+  }
+});
 
 // @route Delete api/profile/
 // @desc Delete Profile, User, Post
