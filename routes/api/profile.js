@@ -184,9 +184,11 @@ router.put(
       check("title", "Title Is required")
         .not()
         .isEmpty(),
+
       check("company", "Company Is required")
         .not()
         .isEmpty(),
+
       check("from", "From date Is required")
         .not()
         .isEmpty()
@@ -267,7 +269,12 @@ router.put(
       check("school", "School Name Is required")
         .not()
         .isEmpty(),
+
       check("degree", "Degree Is required")
+        .not()
+        .isEmpty(),
+
+      check("fieldofstudy", "field of study Is required")
         .not()
         .isEmpty()
     ]
