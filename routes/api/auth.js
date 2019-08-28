@@ -9,8 +9,9 @@ const { check, validationResult } = require("express-validator");
 const { User } = require("../../models");
 
 // @route GET api/auth
-// @desc Test route
-// @access Token Needed
+// @desc Get single user by id
+// @access Private token needed
+
 router.get("/", auth, async (req, res) => {
   try {
     const user = await User.findById(req.user.id).select("-password");
@@ -21,9 +22,10 @@ router.get("/", auth, async (req, res) => {
   }
 });
 
-// @route POST api/auth
-// @desc Register User
+// @route POST api/auth/login
+// @desc Login User
 // @access Public
+
 router.post(
   "/login",
   [
@@ -59,6 +61,7 @@ router.post(
           id: user.id
         }
       };
+
       jwt.sign(
         payload,
         process.env.jwtSecret,
@@ -68,9 +71,11 @@ router.post(
           res.json({ token });
         }
       );
+
       //Send Registered Message
       // res.send("User Registered");
     } catch (err) {
+      console.error(err.message);
       res.status(500).send("Server error");
     }
   }

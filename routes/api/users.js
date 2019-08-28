@@ -9,7 +9,7 @@ const { check, validationResult } = require("express-validator");
 
 const User = require("../../models/User");
 
-// @route POST api/users
+// @route POST api/users/register
 // @desc Register User
 // @access Public Route No Token Needed
 

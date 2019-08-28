@@ -34,7 +34,7 @@ router.get("/me", auth, async (req, res) => {
 // @access Private Token Needed
 
 router.post(
-  "/",
+  "/me",
   [
     auth,
     [
@@ -65,8 +65,8 @@ router.post(
       instagram,
       linkedin
     } = req.body;
-    // Build profile object
 
+    // Build profile object
     const profileFields = {};
     profileFields.user = req.user.id;
     if (company) profileFields.company = company;
@@ -78,6 +78,7 @@ router.post(
     if (skills) {
       profileFields.skills = skills.split(",").map(skill => skill.trim());
     }
+
     // Build social object
     profileFields.social = {};
     if (youtube) profileFields.youtube = youtube;
@@ -86,6 +87,7 @@ router.post(
     if (linkedin) profileFields.linkedin = linkedin;
     if (instagram) profileFields.instagram = instagram;
 
+    // See if profile exists
     try {
       let profile = await Profile.findOne({ user: req.user.id });
       if (profile) {
@@ -97,7 +99,7 @@ router.post(
         return res.json(profile);
       }
 
-      //create profile
+      //Create profile
       profile = new Profile(profileFields);
       await profile.save();
       res.json(profile);
@@ -108,11 +110,11 @@ router.post(
   }
 );
 
-// @route POST api/profile/users
-// @desc Create or Update User Profile
+// @route GET api/profile/users
+// @desc Get all profiles
 // @access Public
 
-router.get("/users", async (req, res) => {
+router.get("/", async (req, res) => {
   try {
     const profiles = await Profile.find().populate("user", ["name", "avatar"]);
     res.json(profiles);
@@ -126,7 +128,7 @@ router.get("/users", async (req, res) => {
 // @desc Get one profile
 // @access Public
 
-router.get("/user/:user_id", async (req, res) => {
+router.get("/:user_id", async (req, res) => {
   try {
     const profile = await Profile.findOne({
       user: req.params.user_id
