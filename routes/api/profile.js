@@ -7,6 +7,10 @@ const auth = require("../../middleware/auth");
 
 const { Profile, User } = require("../../models");
 
+/****************
+ * PROFILE ROUTES
+ ****************/
+
 // @route GET api/profile/users
 // @desc Get all profiles
 // @access Public
@@ -144,6 +148,30 @@ router.post(
   }
 );
 
+// @route Delete api/profile/
+// @desc Delete Profile, User, Post
+// @access Private Token Needed
+
+router.delete("/", auth, async (req, res) => {
+  try {
+    //@todo remove users posts
+
+    // Remove profile
+    await Profile.findOneAndRemove({ user: req.user.id });
+
+    // Remove user
+    await User.findOneAndRemove({ _id: req.user.id });
+    res.json({ msg: "User removed" });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send("Server Error");
+  }
+});
+
+/******************
+ *EXPERIENCE ROUTES
+ *****************/
+
 // @route Create api/profile/experience/
 // @desc Add Experience to Profile
 // @access Private Token Needed
@@ -202,6 +230,7 @@ router.put(
     }
   }
 );
+
 // @route Delete api/profile/experience/:exp_id
 // @desc Delete experience from profile
 // @access Private Token Needed
@@ -222,23 +251,85 @@ router.delete("/experience/:exp_id", auth, async (req, res) => {
   }
 });
 
-// @route Delete api/profile/
-// @desc Delete Profile, User, Post
+/***************
+ *EDUCATION ROUTES
+ ****************/
+
+// @route Create api/profile/education/
+// @desc Add Education to Profile
 // @access Private Token Needed
 
-router.delete("/", auth, async (req, res) => {
+router.put(
+  "/education",
+  [
+    auth,
+    [
+      check("school", "School Name Is required")
+        .not()
+        .isEmpty(),
+      check("degree", "Degree Is required")
+        .not()
+        .isEmpty()
+    ]
+  ],
+
+  async (req, res) => {
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array });
+    }
+
+    const {
+      school,
+      degree,
+      fieldofstudy,
+      from,
+      to,
+      current,
+      description
+    } = req.body;
+
+    const newEducation = {
+      school,
+      degree,
+      fieldofstudy,
+      from,
+      to,
+      current,
+      description
+    };
+
+    try {
+      let profile = await Profile.findOne({ user: req.user.id });
+      profile.education.unshift(newEducation);
+      await profile.save();
+      console.log("Added education");
+      res.json(profile);
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).send("Server error");
+    }
+  }
+);
+
+// @route Delete api/profile/education/:edu_id
+// @desc Delete education from profile by index
+// @access Private Token Needed
+
+router.delete("/education/:edu_id", auth, async (req, res) => {
   try {
-    //@todo remove users posts
+    const profile = await Profile.findOne({ user: req.user.id });
 
-    // Remove profile
-    await Profile.findOneAndRemove({ user: req.user.id });
-
-    // Remove user
-    await User.findOneAndRemove({ _id: req.user.id });
-    res.json({ msg: "User removed" });
+    const getIndexFromProfileEducationArray = profile.education
+      .map(item => item.id)
+      .indexOf(req.params.edu_id);
+    profile.education.splice(getIndexFromProfileEducationArray, 1);
+    profile.save();
+    res.json(profile);
   } catch (err) {
     console.error(err.message);
-    res.status(500).send("Server Error");
+    res.status(500).send("Server error");
   }
 });
 
