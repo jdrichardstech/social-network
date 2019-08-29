@@ -1,27 +1,27 @@
-const express = require("express");
-const gravatar = require("gravatar");
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-const auth = require("../../middleware/auth");
+const express = require('express');
+const gravatar = require('gravatar');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const auth = require('../../middleware/auth');
 // process.env.SUPPRESS_NO_CONFIG_WARNING = "y";
 // const config = require("config");
 const router = express.Router();
-const { check, validationResult } = require("express-validator");
+const { check, validationResult } = require('express-validator');
 
-const { User, Profile } = require("../../models");
+const { User, Profile } = require('../../models');
 
 // @route POST api/users/register
 // @desc Register User
 // @access Public Route No Token Needed
 
 router.post(
-  "/register",
+  '/register',
   [
-    check("name", "Name is required")
+    check('name', 'Name is required')
       .not()
       .isEmpty(),
-    check("email", "Please include a valid email").isEmail(),
-    check("password", "Please include a valid email").isLength({ min: 6 })
+    check('email', 'Please include a valid email').isEmail(),
+    check('password', 'Please include a valid email').isLength({ min: 6 }),
   ],
   async (req, res) => {
     const errors = validationResult(req);
@@ -36,19 +36,19 @@ router.post(
 
       if (user) {
         return res.status(400).json({
-          errors: [{ msg: `User already exists` }]
+          errors: [{ msg: `User already exists` }],
         });
       }
 
       // Get users gravatar
-      const avatar = gravatar.url(email, { s: "200", r: "pg", d: "mm" });
+      const avatar = gravatar.url(email, { s: '200', r: 'pg', d: 'mm' });
 
       //Create the new user
       user = new User({
         name,
         email,
         avatar,
-        password
+        password,
       });
 
       // Encrypt password with bcryptjs
@@ -59,8 +59,8 @@ router.post(
       // Return jswonwebtoken
       const payload = {
         user: {
-          id: user.id
-        }
+          id: user.id,
+        },
       };
 
       jwt.sign(
@@ -69,32 +69,32 @@ router.post(
         { expiresIn: 360000 },
         (err, token) => {
           if (err) throw err;
-          console.log("User Created");
+          console.log('User Created');
           res.json({ token });
-        }
+        },
       );
 
       //Send Registered Message
       // res.send("User Registered");
     } catch (err) {
-      res.status(500).send("Server error");
+      res.status(500).send('Server error');
     }
-  }
+  },
 );
 
 // @route GET api/users/
 // @desc Get All Users
 // @access Public Route No Token Needed
 
-router.get("/", async (req, res) => {
+router.get('/', async (req, res) => {
   try {
-    const users = await User.find().select("-password");
+    const users = await User.find().select('-password');
 
-    if (!users) return res.status(400).json({ msg: "Profile not found" });
+    if (!users) return res.status(400).json({ msg: 'Profile not found' });
     res.json(users);
   } catch (err) {
     console.error(err.message);
-    res.status(500).send("Server Error");
+    res.status(500).send('Server Error');
   }
 });
 
@@ -102,7 +102,7 @@ router.get("/", async (req, res) => {
 // @desc Delete Profile, User, Post
 // @access Private Token Needed
 
-router.delete("/", auth, async (req, res) => {
+router.delete('/', auth, async (req, res) => {
   try {
     //@todo remove users posts
 
@@ -111,10 +111,10 @@ router.delete("/", auth, async (req, res) => {
     // Remove user
     await User.findOneAndRemove({ _id: req.user.id });
 
-    res.json({ msg: "User removed" });
+    res.json({ msg: 'User removed' });
   } catch (err) {
     console.error(err.message);
-    res.status(500).send("Server Error");
+    res.status(500).send('Server Error');
   }
 });
 

@@ -1,11 +1,11 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import axios from "axios";
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+import axios from 'axios';
 
 const Login = () => {
   const [loginData, setLoginData] = useState({
-    email: "",
-    password: ""
+    email: '',
+    password: '',
   });
 
   const { email, password } = loginData;
@@ -18,21 +18,21 @@ const Login = () => {
 
     const newLoginData = {
       email,
-      password
+      password,
     };
 
     try {
       const config = {
         header: {
-          "Content-Type": "application/json"
-        }
+          'Content-Type': 'application/json',
+        },
       };
       // const body = JSON.stringify(newFormData);
 
       const res = await axios.post(
-        "http://localhost:5000/api/auth/login",
+        'http://localhost:5000/api/auth/login',
         newLoginData,
-        config
+        config,
       );
       console.log(res.data);
       return;
