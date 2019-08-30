@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-import { setAlert } from '../../actions/alert';
-import { register } from '../../actions/auth';
+import { setAlert, register } from '../../actions';
 
 const Register = ({ setAlert, register }) => {
   const [formData, setFormData] = useState({

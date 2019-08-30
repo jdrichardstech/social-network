@@ -21,7 +21,7 @@ router.post(
       .not()
       .isEmpty(),
     check('email', 'Please include a valid email').isEmail(),
-    check('password', 'Please include a valid email').isLength({ min: 6 }),
+    check('password', 'Please include a valid password').isLength({ min: 6 })
   ],
   async (req, res) => {
     const errors = validationResult(req);
@@ -36,7 +36,7 @@ router.post(
 
       if (user) {
         return res.status(400).json({
-          errors: [{ msg: `User already exists` }],
+          errors: [{ msg: `User already exists` }]
         });
       }
 
@@ -48,7 +48,7 @@ router.post(
         name,
         email,
         avatar,
-        password,
+        password
       });
 
       // Encrypt password with bcryptjs
@@ -59,8 +59,8 @@ router.post(
       // Return jswonwebtoken
       const payload = {
         user: {
-          id: user.id,
-        },
+          id: user.id
+        }
       };
 
       jwt.sign(
@@ -71,7 +71,7 @@ router.post(
           if (err) throw err;
           console.log('User Created');
           res.json({ token });
-        },
+        }
       );
 
       //Send Registered Message
@@ -79,7 +79,7 @@ router.post(
     } catch (err) {
       res.status(500).send('Server error');
     }
-  },
+  }
 );
 
 // @route GET api/users/
