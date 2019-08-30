@@ -1,4 +1,4 @@
 import { setAlert } from './alert';
-import { register, loadUser } from './auth';
+import { register, loadUser, login } from './auth';
 
-export { setAlert, register, loadUser };
+export { setAlert, register, loadUser, login };

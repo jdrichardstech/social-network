@@ -13,6 +13,13 @@ if (localStorage.token) {
 }
 
 const App = () => {
+  useEffect(() => {
+    if (window.localStorage.token) {
+      store.dispatch(loadUser());
+    }
+    console.log('Mounted');
+  }, []);
+
   return (
     <Provider store={store}>
       <Router>

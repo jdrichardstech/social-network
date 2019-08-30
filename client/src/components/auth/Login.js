@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import { connect } from 'react-redux';
+import { setAlert, login } from '../../actions';
 
-const Login = () => {
+const Login = ({ login, setAlert }) => {
   const [loginData, setLoginData] = useState({
     email: '',
-    password: '',
+    password: ''
   });
 
   const { email, password } = loginData;
@@ -16,25 +18,9 @@ const Login = () => {
   const handleSubmit = async e => {
     e.preventDefault();
 
-    const newLoginData = {
-      email,
-      password,
-    };
-
     try {
-      const config = {
-        header: {
-          'Content-Type': 'application/json',
-        },
-      };
-      // const body = JSON.stringify(newFormData);
+      login(email, password);
 
-      const res = await axios.post(
-        'http://localhost:5000/api/auth/login',
-        newLoginData,
-        config,
-      );
-      console.log(res.data);
       return;
     } catch (err) {
       console.error(err);
@@ -43,7 +29,6 @@ const Login = () => {
 
   return (
     <section className="container">
-      <div className="alert alert-danger">Invalid credentials</div>
       <h1 className="large text-primary">Sign In</h1>
       <p className="lead">
         <i className="fas fa-user"></i> Sign into Your Account
@@ -56,7 +41,6 @@ const Login = () => {
             name="email"
             value={email}
             onChange={e => handleChange(e)}
-            required
           />
         </div>
         <div className="form-group">
@@ -76,4 +60,7 @@ const Login = () => {
     </section>
   );
 };
-export default Login;
+export default connect(
+  null,
+  { setAlert, login }
+)(Login);

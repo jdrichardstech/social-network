@@ -21,8 +21,15 @@ const Register = ({ setAlert, register }) => {
     e.preventDefault();
     if (password !== password2) {
       setAlert('Passwords do not match', 'danger');
+      setFormData({ ...formData, password: '', password2: '' });
     } else {
       register({ name, email, password });
+      setAlert('Success! User Was Registered', 'success');
+      setFormData({
+        ...formData,
+        name: '',
+        email: ''
+      });
     }
   };
 
