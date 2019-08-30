@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import store from './store';
+import { Dashboard } from './components/dashboard';
 import { Navbar, Landing, Alert } from './components/layout';
 import { Register, Login } from './components/auth';
 import { loadUser } from './actions';
@@ -32,6 +33,7 @@ const App = () => {
             <Switch>
               <Route exact path="/register" component={Register} />
               <Route exact path="/login" component={Login} />
+              <Route exact path="/dashboard" component={Dashboard} />
             </Switch>
           </section>
         </>

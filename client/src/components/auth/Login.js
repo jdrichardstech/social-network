@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import axios from 'axios';
+import { Link, Redirect } from 'react-router-dom';
+
 import { connect } from 'react-redux';
 import { setAlert, login } from '../../actions';
 
-const Login = ({ login, setAlert }) => {
+const Login = ({ login, setAlert, isAuthenticated }) => {
   const [loginData, setLoginData] = useState({
     email: '',
     password: ''
@@ -26,6 +26,10 @@ const Login = ({ login, setAlert }) => {
       console.error(err);
     }
   };
+
+  if (isAuthenticated) {
+    return <Redirect to="/dashboard" />;
+  }
 
   return (
     <section className="container">
@@ -60,7 +64,11 @@ const Login = ({ login, setAlert }) => {
     </section>
   );
 };
+
+const mapStateToProps = state => ({
+  isAuthenticated: state.auth.isAuthenticated
+});
 export default connect(
-  null,
+  mapStateToProps,
   { setAlert, login }
 )(Login);
