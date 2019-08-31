@@ -1,11 +1,11 @@
 import React from 'react';
-import { Redirect } from 'react-router-dom';
+// import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 const Dashboard = ({ isAuthenticated }) => {
-  if (!isAuthenticated) {
-    return <Redirect to="/login" />;
-  }
+  // if (!isAuthenticated) {
+  //   return <Redirect to="/login" />;
+  // }
 
   return (
     <div>

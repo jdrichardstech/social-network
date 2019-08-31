@@ -5,6 +5,7 @@ import store from './store';
 import { Dashboard } from './components/dashboard';
 import { Navbar, Landing, Alert } from './components/layout';
 import { Register, Login } from './components/auth';
+import { PrivateRoute } from './components/routing';
 import { loadUser } from './actions';
 import setAuthToken from './utils/setAuthToken';
 import './App.css';
@@ -33,7 +34,7 @@ const App = () => {
             <Switch>
               <Route exact path="/register" component={Register} />
               <Route exact path="/login" component={Login} />
-              <Route exact path="/dashboard" component={Dashboard} />
+              <PrivateRoute exact path="/dashboard" component={Dashboard} />
             </Switch>
           </section>
         </>
