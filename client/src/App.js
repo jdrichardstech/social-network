@@ -19,7 +19,6 @@ const App = () => {
     if (window.localStorage.token) {
       store.dispatch(loadUser());
     }
-    console.log('Mounted');
   }, []);
 
   return (
