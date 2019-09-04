@@ -1,10 +1,10 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 const { Schema, model } = mongoose;
 
 const PostSchema = new Schema({
   user: {
     type: Schema.Types.ObjectId,
-    ref: "users"
+    ref: 'users'
   },
   text: {
     type: String,
@@ -16,7 +16,7 @@ const PostSchema = new Schema({
     {
       user: {
         type: Schema.Types.ObjectId,
-        ref: "users"
+        ref: 'user'
       }
     }
   ],
@@ -24,7 +24,7 @@ const PostSchema = new Schema({
     {
       user: {
         type: Schema.Types.ObjectId,
-        ref: "users"
+        ref: 'user'
       },
       text: {
         type: String,
@@ -48,4 +48,4 @@ const PostSchema = new Schema({
   }
 });
 
-module.exports = Post = model("post", PostSchema);
+module.exports = Post = model('post', PostSchema);

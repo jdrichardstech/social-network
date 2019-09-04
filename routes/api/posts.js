@@ -18,8 +18,8 @@ router.post(
     [
       check('text', 'A post is required')
         .not()
-        .isEmpty(),
-    ],
+        .isEmpty()
+    ]
   ],
   async (req, res) => {
     const errors = validationResult(req);
@@ -35,7 +35,7 @@ router.post(
         text: req.body.text,
         name: user.name,
         avatar: user.avatar,
-        user: req.user.id,
+        user: req.user.id
       });
 
       let post = await newPost.save();
@@ -44,7 +44,7 @@ router.post(
       console.error(err.message);
       res.status(500).send('Server error');
     }
-  },
+  }
 );
 
 // @route GET api/posts
@@ -133,7 +133,7 @@ router.put('/like/:id', auth, async (req, res) => {
   }
 });
 
-// @route PUT api/posts/like/:id
+// @route PUT api/posts/unlike/:id
 // @desc Like a post
 // @access Private Route Token Needed
 
@@ -175,8 +175,8 @@ router.post(
     [
       check('text', 'A comment is required')
         .not()
-        .isEmpty(),
-    ],
+        .isEmpty()
+    ]
   ],
   async (req, res) => {
     const errors = validationResult(req);
@@ -193,7 +193,7 @@ router.post(
         text: req.body.text,
         name: user.name,
         avatar: user.avatar,
-        user: req.user.id,
+        user: req.user.id
       });
       post.comments.unshift(newComment);
       await post.save();
@@ -202,7 +202,7 @@ router.post(
       console.error(err.message);
       res.status(500).send('Server error');
     }
-  },
+  }
 );
 
 // @route DELETE api/posts/comment/:id/:comment_id
@@ -213,7 +213,7 @@ router.delete('/comment/:id/:comment_id', auth, async (req, res) => {
   try {
     const post = await Post.findById(req.params.id);
     const comment = post.comments.find(
-      comment => comment.id == req.params.comment_id,
+      comment => comment.id == req.params.comment_id
     );
 
     // Does comment exist

@@ -36,7 +36,7 @@ router.get('/', async (req, res) => {
 router.get('/:user_id', async (req, res) => {
   try {
     const profile = await Profile.findOne({
-      user: req.params.user_id,
+      user: req.params.user_id
     }).populate('user', ['name', 'avatar']);
 
     if (!profile) return res.status(400).json({ msg: 'Profile not found' });
@@ -57,7 +57,7 @@ router.get('/me', auth, async (req, res) => {
   try {
     const profile = await Profile.findOne({ user: req.user.id }).populate(
       'user',
-      ['name', 'avatar'],
+      ['name', 'avatar']
     );
 
     if (!profile) {
@@ -85,8 +85,8 @@ router.post(
         .isEmpty(),
       check('skills', 'Skills is required')
         .not()
-        .isEmpty(),
-    ],
+        .isEmpty()
+    ]
   ],
   async (req, res) => {
     const errors = validationResult(req);
@@ -105,7 +105,7 @@ router.post(
       facebook,
       twitter,
       instagram,
-      linkedin,
+      linkedin
     } = req.body;
 
     // Build profile object
@@ -120,6 +120,7 @@ router.post(
     if (skills) {
       profileFields.skills = skills.split(',').map(skill => skill.trim());
     }
+    console.log(req.user);
 
     // Build social object
     profileFields.social = {};
@@ -136,7 +137,7 @@ router.post(
         profile = await Profile.findOneAndUpdate(
           { user: req.user.id },
           { $set: profileFields },
-          { new: true },
+          { new: true }
         );
         return res.json(profile);
       }
@@ -149,7 +150,7 @@ router.post(
       console.error(err.message);
       res.status(500).send('Server Error');
     }
-  },
+  }
 );
 
 // @route Delete api/profile/
@@ -195,8 +196,8 @@ router.put(
 
       check('from', 'From date Is required')
         .not()
-        .isEmpty(),
-    ],
+        .isEmpty()
+    ]
   ],
 
   async (req, res) => {
@@ -212,7 +213,7 @@ router.put(
       from,
       to,
       current,
-      description,
+      description
     } = req.body;
 
     const newExperience = {
@@ -222,7 +223,7 @@ router.put(
       from,
       to,
       current,
-      description,
+      description
     };
 
     try {
@@ -234,7 +235,7 @@ router.put(
       console.error(err.message);
       res.status(500).send('Server error');
     }
-  },
+  }
 );
 
 // @route Delete api/profile/experience/:exp_id
@@ -280,8 +281,8 @@ router.put(
 
       check('fieldofstudy', 'Field of study Is required')
         .not()
-        .isEmpty(),
-    ],
+        .isEmpty()
+    ]
   ],
 
   async (req, res) => {
@@ -298,7 +299,7 @@ router.put(
       from,
       to,
       current,
-      description,
+      description
     } = req.body;
 
     const newEducation = {
@@ -308,7 +309,7 @@ router.put(
       from,
       to,
       current,
-      description,
+      description
     };
 
     try {
@@ -321,7 +322,7 @@ router.put(
       console.error(err.message);
       res.status(500).send('Server error');
     }
-  },
+  }
 );
 
 // @route Delete api/profile/education/:edu_id
@@ -359,7 +360,7 @@ router.get('/github/:username', async (req, res) => {
     const options = {
       uri,
       method: 'GET',
-      headers: { 'user-agent': 'node.js' },
+      headers: { 'user-agent': 'node.js' }
     };
 
     request(options, (error, response, body) => {
